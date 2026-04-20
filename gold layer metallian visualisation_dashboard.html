@@ -1,0 +1,294 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-tertiary);}
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:180px;flex-shrink:0;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);padding:16px 0;}
+.logo{padding:0 16px 16px;font-size:13px;font-weight:500;color:var(--color-text-primary);border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:8px;}
+.logo span{font-size:11px;color:var(--color-text-tertiary);display:block;font-weight:400;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:13px;cursor:pointer;color:var(--color-text-secondary);border-left:2px solid transparent;transition:all .15s;}
+.nav-item:hover{background:var(--color-background-secondary);color:var(--color-text-primary);}
+.nav-item.active{background:var(--color-background-info);color:var(--color-text-info);border-left-color:#185FA5;}
+.nav-dot{width:7px;height:7px;border-radius:50%;}
+.main{flex:1;padding:20px;min-width:0;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.page-title{font-size:16px;font-weight:500;}
+.filters{display:flex;gap:8px;}
+.filter-chip{font-size:12px;padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);}
+.filter-chip.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent;}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;}
+.kpi-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;}
+.kpi-val{font-size:20px;font-weight:500;}
+.kpi-delta{font-size:11px;margin-top:4px;}
+.kpi-up{color:var(--color-text-success);}
+.kpi-down{color:var(--color-text-danger);}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.chart-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;}
+.chart-card.full{grid-column:1/-1;}
+.chart-title{font-size:13px;font-weight:500;margin-bottom:4px;}
+.chart-sub{font-size:11px;color:var(--color-text-tertiary);margin-bottom:12px;}
+.chart-wrap{position:relative;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:11px;color:var(--color-text-secondary);}
+.leg-dot{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:4px;}
+.page{display:none;}
+.page.active{display:block;}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;}
+.tbl th{text-align:left;padding:8px 10px;color:var(--color-text-secondary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px;}
+.tbl td{padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);}
+.tbl tr:last-child td{border-bottom:none;}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;}
+.bar-inline{height:6px;border-radius:3px;background:#378ADD;display:inline-block;}
+</style>
+
+<div class="shell">
+  <div class="sidebar">
+    <div class="logo">Sales Analytics<span>Gold layer · Power BI</span></div>
+    <div class="nav-item active" onclick="nav(this,'overview')"><div class="nav-dot" style="background:#378ADD"></div>Overview</div>
+    <div class="nav-item" onclick="nav(this,'customers')"><div class="nav-dot" style="background:#1D9E75"></div>Customers</div>
+    <div class="nav-item" onclick="nav(this,'products')"><div class="nav-dot" style="background:#EF9F27"></div>Products</div>
+    <div class="nav-item" onclick="nav(this,'time')"><div class="nav-dot" style="background:#7F77DD"></div>Time intel</div>
+    <div class="nav-item" onclick="nav(this,'ops')"><div class="nav-dot" style="background:#D85A30"></div>Operations</div>
+  </div>
+
+  <div class="main">
+
+    <div class="page active" id="page-overview">
+      <div class="top-bar">
+        <div class="page-title">Sales overview</div>
+        <div class="filters">
+          <div class="filter-chip active">All years</div>
+          <div class="filter-chip">2023</div>
+          <div class="filter-chip">2024</div>
+        </div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total revenue</div><div class="kpi-val">$8.4M</div><div class="kpi-delta kpi-up">+12% YoY</div></div>
+        <div class="kpi"><div class="kpi-label">Total orders</div><div class="kpi-val">24,312</div><div class="kpi-delta kpi-up">+8% YoY</div></div>
+        <div class="kpi"><div class="kpi-label">Customers</div><div class="kpi-val">18,484</div><div class="kpi-delta kpi-up">+5% YoY</div></div>
+        <div class="kpi"><div class="kpi-label">Avg order value</div><div class="kpi-val">$346</div><div class="kpi-delta kpi-down">-2% YoY</div></div>
+        <div class="kpi"><div class="kpi-label">Avg ship days</div><div class="kpi-val">4.2d</div><div class="kpi-delta kpi-up">-0.3d</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card full">
+          <div class="chart-title">Monthly revenue trend — current vs prior year</div>
+          <div class="chart-sub">Answers: "How has revenue trended?" and "YoY comparison"</div>
+          <div class="legend">
+            <span><span class="leg-dot" style="background:#378ADD"></span>2024</span>
+            <span><span class="leg-dot" style="background:#B5D4F4"></span>2023</span>
+          </div>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-trend" role="img" aria-label="Monthly revenue 2023 vs 2024">Monthly revenue comparison line chart.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Revenue by product category</div>
+          <div class="chart-sub">Answers: "Which category earns most?"</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-cat" role="img" aria-label="Revenue by category bar chart">Category revenue bar chart.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Revenue by country</div>
+          <div class="chart-sub">Answers: "How is revenue distributed geographically?"</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-country" role="img" aria-label="Revenue by country horizontal bar">Country revenue bar chart.</canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-customers">
+      <div class="top-bar"><div class="page-title">Customer analysis</div></div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi"><div class="kpi-label">Total customers</div><div class="kpi-val">18,484</div><div class="kpi-delta kpi-up">+5%</div></div>
+        <div class="kpi"><div class="kpi-label">Avg revenue/customer</div><div class="kpi-val">$455</div><div class="kpi-delta kpi-up">+7%</div></div>
+        <div class="kpi"><div class="kpi-label">Top customer revenue</div><div class="kpi-val">$32K</div><div class="kpi-delta" style="color:var(--color-text-tertiary)">lifetime</div></div>
+        <div class="kpi"><div class="kpi-label">Avg customer age</div><div class="kpi-val">42 yrs</div><div class="kpi-delta" style="color:var(--color-text-tertiary)">from birthdate</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Gender split</div>
+          <div class="chart-sub">Answers: "Gender breakdown of customers?"</div>
+          <div class="chart-wrap" style="height:180px"><canvas id="c-gender" role="img" aria-label="Gender donut chart">Gender split donut chart.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Marital status vs orders</div>
+          <div class="chart-sub">Answers: "Does marital status affect purchasing?"</div>
+          <div class="chart-wrap" style="height:180px"><canvas id="c-marital" role="img" aria-label="Orders by marital status">Marital status bar chart.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Customer age distribution</div>
+          <div class="chart-sub">Answers: "What is the age distribution?"</div>
+          <div class="chart-wrap" style="height:180px"><canvas id="c-age" role="img" aria-label="Age group distribution histogram">Age distribution bar chart.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Top 10 customers by revenue</div>
+          <div class="chart-sub">Answers: "Who are the highest-value customers?"</div>
+          <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th style="width:30px">#</th><th>Customer</th><th>Country</th><th style="width:80px">Revenue</th></tr></thead>
+            <tbody id="top-cust"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-products">
+      <div class="top-bar"><div class="page-title">Product insights</div></div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi"><div class="kpi-label">Products sold</div><div class="kpi-val">273</div></div>
+        <div class="kpi"><div class="kpi-label">Total profit</div><div class="kpi-val">$2.1M</div><div class="kpi-delta kpi-up">+9%</div></div>
+        <div class="kpi"><div class="kpi-label">Avg profit margin</div><div class="kpi-val">24.8%</div></div>
+        <div class="kpi"><div class="kpi-label">Avg price</div><div class="kpi-val">$412</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Top 10 products by revenue</div>
+          <div class="chart-sub">Answers: "What are the best-selling products?"</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="c-top10" role="img" aria-label="Top 10 products horizontal bar">Top 10 products bar chart.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Revenue vs profit margin by product line</div>
+          <div class="chart-sub">Answers: "Which products are most profitable?"</div>
+          <div class="chart-wrap" style="height:260px"><canvas id="c-margin" role="img" aria-label="Revenue vs margin scatter chart">Revenue vs margin scatter.</canvas></div>
+        </div>
+        <div class="chart-card full">
+          <div class="chart-title">Revenue by product line</div>
+          <div class="chart-sub">Answers: "How does performance differ across product lines?"</div>
+          <div class="legend">
+            <span><span class="leg-dot" style="background:#378ADD"></span>Road</span>
+            <span><span class="leg-dot" style="background:#1D9E75"></span>Mountain</span>
+            <span><span class="leg-dot" style="background:#EF9F27"></span>Touring</span>
+            <span><span class="leg-dot" style="background:#7F77DD"></span>Accessories</span>
+          </div>
+          <div class="chart-wrap" style="height:160px"><canvas id="c-lines" role="img" aria-label="Revenue by product line stacked bar">Product line stacked bar.</canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-time">
+      <div class="top-bar"><div class="page-title">Time intelligence</div></div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi"><div class="kpi-label">YTD revenue</div><div class="kpi-val">$5.2M</div><div class="kpi-delta kpi-up">+11% vs LY</div></div>
+        <div class="kpi"><div class="kpi-label">Best month</div><div class="kpi-val">Nov 2024</div><div class="kpi-delta" style="color:var(--color-text-tertiary)">$920K</div></div>
+        <div class="kpi"><div class="kpi-label">MoM growth</div><div class="kpi-val">+6.2%</div><div class="kpi-delta kpi-up">vs last month</div></div>
+        <div class="kpi"><div class="kpi-label">Quarterly avg</div><div class="kpi-val">$2.1M</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card full">
+          <div class="chart-title">Quarterly revenue — 2022 to 2024</div>
+          <div class="chart-sub">Answers: "What are quarterly trends?"</div>
+          <div class="legend">
+            <span><span class="leg-dot" style="background:#B5D4F4"></span>2022</span>
+            <span><span class="leg-dot" style="background:#378ADD"></span>2023</span>
+            <span><span class="leg-dot" style="background:#0C447C"></span>2024</span>
+          </div>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-qtr" role="img" aria-label="Quarterly revenue grouped bar">Quarterly revenue chart.</canvas></div>
+        </div>
+        <div class="chart-card full">
+          <div class="chart-title">YoY growth rate (%)</div>
+          <div class="chart-sub">Answers: "How does sales compare year-over-year?"</div>
+          <div class="chart-wrap" style="height:160px"><canvas id="c-yoy" role="img" aria-label="YoY growth percentage line chart">YoY growth line chart.</canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-ops">
+      <div class="top-bar"><div class="page-title">Operations</div></div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi"><div class="kpi-label">Avg ship days</div><div class="kpi-val">4.2d</div><div class="kpi-delta kpi-up">-0.3d MoM</div></div>
+        <div class="kpi"><div class="kpi-label">Late orders</div><div class="kpi-val">1,204</div><div class="kpi-delta kpi-down">4.9% of total</div></div>
+        <div class="kpi"><div class="kpi-label">On-time rate</div><div class="kpi-val">95.1%</div><div class="kpi-delta kpi-up">+1.2%</div></div>
+        <div class="kpi"><div class="kpi-label">Avg due days</div><div class="kpi-val">7.8d</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Avg shipping days per month</div>
+          <div class="chart-sub">Answers: "Order to shipment time trend?"</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-ship" role="img" aria-label="Avg shipping days per month line chart">Shipping days trend.</canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Late order rate per month (%)</div>
+          <div class="chart-sub">Answers: "Are orders shipped after due date?"</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-late" role="img" aria-label="Late order rate per month">Late order rate chart.</canvas></div>
+        </div>
+        <div class="chart-card full">
+          <div class="chart-title">Late orders by product category</div>
+          <div class="chart-sub">Which product lines have fulfilment issues?</div>
+          <div class="chart-wrap" style="height:140px"><canvas id="c-latecat" role="img" aria-label="Late orders by category bar">Late orders by category.</canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function nav(el, page) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-' + page).classList.add('active');
+  setTimeout(() => initCharts(page), 50);
+}
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const quarters = ['Q1','Q2','Q3','Q4'];
+const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+const labelColor = isDark ? '#888780' : '#888780';
+const defaults = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+const axOpts = (x, y) => ({ scales: { x: { grid: { color: x ? gridColor : 'transparent' }, ticks: { color: labelColor, font: { size: 11 } } }, y: { grid: { color: y ? gridColor : 'transparent' }, ticks: { color: labelColor, font: { size: 11 } } } } });
+const inited = {};
+
+function initCharts(page) {
+  if (inited[page]) return;
+  inited[page] = true;
+  if (page === 'overview') {
+    new Chart('c-trend', { type: 'line', data: { labels: months, datasets: [
+      { label: '2024', data: [580,620,700,680,750,810,780,820,860,910,920,870], borderColor: '#378ADD', backgroundColor: 'transparent', tension: 0.35, borderWidth: 2, pointRadius: 2 },
+      { label: '2023', data: [510,540,610,600,680,720,700,740,780,820,840,800], borderColor: '#B5D4F4', backgroundColor: 'transparent', tension: 0.35, borderWidth: 2, pointRadius: 2 }
+    ]}, options: { ...defaults, ...axOpts(false, true) } });
+    new Chart('c-cat', { type: 'bar', data: { labels: ['Bikes','Accessories','Clothing','Components'], datasets: [{ data: [4200,1800,900,1500], backgroundColor: ['#378ADD','#1D9E75','#EF9F27','#7F77DD'], borderRadius: 4 }] }, options: { ...defaults, ...axOpts(false, true), plugins: { legend: { display: false } } } });
+    new Chart('c-country', { type: 'bar', data: { labels: ['USA','UK','France','Germany','Canada','Australia'], datasets: [{ data: [3200,1500,900,800,600,400], backgroundColor: '#378ADD', borderRadius: 4 }] }, options: { ...defaults, indexAxis: 'y', ...axOpts(true, false) } });
+  }
+  if (page === 'customers') {
+    const custData = [['A. Smith','USA',32400],['B. Müller','Germany',28100],['C. Patel','UK',25300],['D. Tanaka','USA',22800],['E. Rossi','France',21500],['F. Kim','Canada',19200],['G. Santos','Australia',18700],['H. Brown','USA',17900],['I. Dubois','France',17100],['J. Nkosi','UK',16400]];
+    const tb = document.getElementById('top-cust');
+    custData.forEach((r,i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="color:var(--color-text-tertiary)">${i+1}</td><td>${r[0]}</td><td>${r[1]}</td><td>$${(r[2]/1000).toFixed(1)}K</td>`;
+      tb.appendChild(tr);
+    });
+    new Chart('c-gender', { type: 'doughnut', data: { labels: ['Male','Female','n/a'], datasets: [{ data: [52, 43, 5], backgroundColor: ['#378ADD','#1D9E75','#B4B2A9'], borderWidth: 0 }] }, options: { ...defaults, cutout: '65%', plugins: { legend: { display: false } } } });
+    new Chart('c-marital', { type: 'bar', data: { labels: ['Married','Single'], datasets: [{ label: 'Orders', data: [14200,10112], backgroundColor: ['#378ADD','#1D9E75'], borderRadius: 4 }] }, options: { ...defaults, ...axOpts(false, true) } });
+    new Chart('c-age', { type: 'bar', data: { labels: ['18–30','31–45','46–60','60+'], datasets: [{ data: [3200,6800,5400,3084], backgroundColor: '#7F77DD', borderRadius: 4 }] }, options: { ...defaults, ...axOpts(false, true) } });
+  }
+  if (page === 'products') {
+    new Chart('c-top10', { type: 'bar', data: { labels: ['Mountain-200','Road-150','Touring-1000','Road-250','Mountain-400','HL Road Frame','HL Mountain Frame','Touring Rear Whl','Sport-100 Helmet','AWC Logo Cap'], datasets: [{ data: [820,780,650,610,590,480,460,420,380,350], backgroundColor: '#378ADD', borderRadius: 3 }] }, options: { ...defaults, indexAxis: 'y', ...axOpts(true, false), scales: { x: { ticks: { color: labelColor, font: { size: 10 }, callback: v => '$' + v + 'K' }, grid: { color: gridColor } }, y: { ticks: { color: labelColor, font: { size: 10 } }, grid: { color: 'transparent' } } } } });
+    new Chart('c-margin', { type: 'scatter', data: { datasets: [
+      { label: 'Road', data: [{x:780,y:28},{x:610,y:25},{x:480,y:31}], backgroundColor: '#378ADD', pointRadius: 7 },
+      { label: 'Mountain', data: [{x:820,y:22},{x:590,y:19},{x:460,y:24}], backgroundColor: '#1D9E75', pointRadius: 7 },
+      { label: 'Touring', data: [{x:650,y:18},{x:420,y:15}], backgroundColor: '#EF9F27', pointRadius: 7 },
+      { label: 'Accessories', data: [{x:380,y:38},{x:350,y:42}], backgroundColor: '#7F77DD', pointRadius: 7 }
+    ]}, options: { ...defaults, ...axOpts(true, true), scales: { x: { title: { display: true, text: 'Revenue ($K)', color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, ticks: { color: labelColor, font: { size: 11 } } }, y: { title: { display: true, text: 'Margin %', color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, ticks: { color: labelColor, font: { size: 11 } } } } } });
+    new Chart('c-lines', { type: 'bar', data: { labels: months, datasets: [
+      { label: 'Road', data: [180,200,210,190,220,240,230,250,260,270,280,260], backgroundColor: '#378ADD', borderRadius: 2 },
+      { label: 'Mountain', data: [120,130,140,135,150,160,155,165,170,175,180,170], backgroundColor: '#1D9E75', borderRadius: 2 },
+      { label: 'Touring', data: [80,90,95,85,100,110,105,115,120,125,130,120], backgroundColor: '#EF9F27', borderRadius: 2 },
+      { label: 'Accessories', data: [40,45,50,45,55,60,58,62,65,68,70,65], backgroundColor: '#7F77DD', borderRadius: 2 }
+    ]}, options: { ...defaults, ...axOpts(false, true), scales: { x: { stacked: true, ticks: { color: labelColor, font: { size: 11 } }, grid: { color: 'transparent' } }, y: { stacked: true, ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } } } } });
+  }
+  if (page === 'time') {
+    new Chart('c-qtr', { type: 'bar', data: { labels: quarters, datasets: [
+      { label: '2022', data: [1600,1750,1820,1900], backgroundColor: '#B5D4F4', borderRadius: 3 },
+      { label: '2023', data: [1800,1950,2050,2100], backgroundColor: '#378ADD', borderRadius: 3 },
+      { label: '2024', data: [2000,2200,2350,2100], backgroundColor: '#0C447C', borderRadius: 3 }
+    ]}, options: { ...defaults, ...axOpts(false, true), scales: { x: { grouped: true, ticks: { color: labelColor, font: { size: 11 } }, grid: { color: 'transparent' } }, y: { ticks: { color: labelColor, font: { size: 11 }, callback: v => '$' + (v/1000).toFixed(1) + 'M' }, grid: { color: gridColor } } } } });
+    new Chart('c-yoy', { type: 'line', data: { labels: months, datasets: [{ label: 'YoY %', data: [8,9,10,11,10.5,12,11,12,13,11,10,9], borderColor: '#7F77DD', backgroundColor: 'transparent', tension: 0.4, borderWidth: 2, pointRadius: 3, fill: false }] }, options: { ...defaults, ...axOpts(false, true), scales: { x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: 'transparent' } }, y: { ticks: { color: labelColor, font: { size: 11 }, callback: v => v + '%' }, grid: { color: gridColor } } } } });
+  }
+  if (page === 'ops') {
+    new Chart('c-ship', { type: 'line', data: { labels: months, datasets: [{ label: 'Avg ship days', data: [4.8,4.6,4.5,4.7,4.4,4.3,4.2,4.1,4.3,4.0,3.9,4.1], borderColor: '#1D9E75', backgroundColor: 'transparent', tension: 0.4, borderWidth: 2, pointRadius: 3 }] }, options: { ...defaults, ...axOpts(false, true), scales: { x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: 'transparent' } }, y: { min: 3, max: 6, ticks: { color: labelColor, font: { size: 11 }, callback: v => v + 'd' }, grid: { color: gridColor } } } } });
+    new Chart('c-late', { type: 'bar', data: { labels: months, datasets: [{ label: 'Late %', data: [6.2,5.8,5.4,6.0,5.1,4.8,5.0,4.6,5.2,4.3,4.1,4.9], backgroundColor: months.map((_,i) => [3,4,8,9].includes(i) ? '#E24B4A' : '#F09595'), borderRadius: 4 }] }, options: { ...defaults, ...axOpts(false, true), scales: { x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: 'transparent' } }, y: { ticks: { color: labelColor, font: { size: 11 }, callback: v => v + '%' }, grid: { color: gridColor } } } } });
+    new Chart('c-latecat', { type: 'bar', data: { labels: ['Bikes','Components','Accessories','Clothing'], datasets: [{ data: [620,310,180,94], backgroundColor: ['#E24B4A','#F09595','#F7C1C1','#FCEBEB'], borderRadius: 4 }] }, options: { ...defaults, ...axOpts(false, true) } });
+  }
+}
+
+initCharts('overview');
+</script>
